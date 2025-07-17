@@ -1,0 +1,17 @@
+{
+  "name": "healing-copywriter",
+  "version": "1.0.0",
+  "description": "療癒師專用文案生成器",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site, no build needed'",
+    "start": "vercel --prod"
+  },
+  "keywords": ["healing", "copywriting", "ai", "gemini"],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  }
+}
