@@ -1,0 +1,634 @@
+/* 🌸 療癒師文案生成器 - Vercel 版樣式 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft JhengHei', '微軟正黑體', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    background: linear-gradient(135deg, #81c784, #66bb6a);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: gentle-pulse 4s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.2; }
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+.header p {
+    font-size: 1.2em;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+    font-weight: 300;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: 800px;
+}
+
+.input-section {
+    background: #fafafa;
+    padding: 40px 35px;
+    border-right: 1px solid #e0e0e0;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.output-section {
+    padding: 40px 35px;
+    background: white;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.section-title {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    color: #4a4a4a;
+    border-bottom: 3px solid #81c784;
+    padding-bottom: 12px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: #66bb6a;
+    border-radius: 2px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    animation: slideInLeft 0.5s ease;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #555;
+    font-size: 1.05em;
+}
+
+.required {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #81c784;
+    box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #81c784, #66bb6a);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(129, 199, 132, 0.4);
+}
+
+.generate-btn:active {
+    transform: translateY(0);
+}
+
+.generate-btn.loading {
+    background: #bbb;
+    cursor: not-allowed;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.step-container {
+    margin-bottom: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.step-container:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.step-header {
+    background: linear-gradient(135deg, #90caf9, #64b5f6);
+    color: white;
+    padding: 20px 25px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.step-number {
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.step-content {
+    padding: 25px;
+    background: #fafafa;
+    min-height: 140px;
+    font-size: 16px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.step-content.empty {
+    color: #999;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+}
+
+.tips {
+    background: linear-gradient(135deg, #fff8e1, #fff3c4);
+    border: 1px solid #ffcc02;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(255, 204, 2, 0.1);
+}
+
+.tips h4 {
+    color: #f57c00;
+    margin-bottom: 12px;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.tips ul {
+    margin-left: 20px;
+    color: #ef6c00;
+}
+
+.tips ul li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.final-copy {
+    background: linear-gradient(135deg, #81c784, #66bb6a);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 25px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(129, 199, 132, 0.3);
+}
+
+.final-copy h3 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.final-copy-content {
+    background: rgba(255,255,255,0.15);
+    padding: 25px;
+    border-radius: 10px;
+    min-height: 250px;
+    white-space: pre-wrap;
+    line-height: 1.9;
+    font-size: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.step-names {
+    font-size: 0.9em;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.explanation {
+    margin-top: 12px;
+}
+
+.explanation p {
+    margin-bottom: 15px;
+    color: #666;
+    line-height: 1.7;
+}
+
+.benefits {
+    margin-top: 15px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #555;
+    padding: 8px 0;
+}
+
+.benefit-item .icon {
+    font-size: 18px;
+    width: 25px;
+    flex-shrink: 0;
+}
+
+/* 載入遮罩 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loading-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 90%;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #81c784;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-content h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+}
+
+.loading-content p {
+    color: #666;
+    font-size: 1em;
+}
+
+/* 成功提示 */
+.success-toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+    font-weight: 500;
+    animation: slideInFromRight 0.3s ease;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 錯誤訊息 */
+.error-message {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border-left: 5px solid #dc3545;
+    font-size: 15px;
+    line-height: 1.6;
+    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.1);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .input-section {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        max-height: none;
+    }
+    
+    .output-section {
+        max-height: none;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .header p {
+        font-size: 1em;
+    }
+    
+    .container {
+        margin: 10px;
+        border-radius: 15px;
+    }
+    
+    body {
+        padding: 10px;
+    }
+    
+    .input-section,
+    .output-section {
+        padding: 25px 20px;
+    }
+    
+    .section-title {
+        font-size: 1.5em;
+    }
+    
+    .success-toast {
+        top: 20px;
+        right: 20px;
+        left: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 30px 20px;
+    }
+    
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .generate-btn {
+        padding: 15px;
+        font-size: 16px;
+    }
+    
+    .step-header {
+        padding: 15px 20px;
+    }
+    
+    .step-content {
+        padding: 20px;
+        font-size: 15px;
+    }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+    
+    .container {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .input-section {
+        background: #374151;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        background: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .step-content {
+        background: #374151;
+        color: #e2e8f0;
+    }
+    
+    .step-content.empty {
+        background: #2d3748;
+        color: #a0aec0;
+    }
+}
+
+/* 無障礙改善 */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: 2px solid #81c784;
+    outline-offset: 2px;
+}
+
+.copy-btn:focus,
+.generate-btn:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* 印刷樣式 */
+@media print {
+    .input-section {
+        display: none;
+    }
+    
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .copy-btn {
+        display: none;
+    }
+    
+    .final-copy {
+        background: white;
+        color: black;
+        border: 2px solid #81c784;
+    }
+    
+    .final-copy-content {
+        background: white;
+        color: black;
+    }
+}

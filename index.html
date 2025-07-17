@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>療癒師專用文案生成器</title>
+    <meta name="description" content="專為療癒師設計的 AI 文案生成工具，幫助您創建溫暖、自然的服務文案">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 主要內容 -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1>🌱 療癒師專用文案生成器</h1>
+            <p>自然分享 → 建立共鳴 → 展現專業 → 溫柔邀請 → 簡單行動</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">💚 服務資訊填寫</h2>
+                
+                <div class="tips">
+                    <h4>🌟 專業 AI 文案生成</h4>
+                    <div class="explanation">
+                        <p>使用先進的 AI 技術為您生成專業文案，安全、快速、有效果！</p>
+                        <div class="benefits">
+                            <div class="benefit-item">
+                                <span class="icon">🔒</span>
+                                <span>完全安全：您的資料不會被儲存</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="icon">⚡</span>
+                                <span>快速生成：30秒內完成專業文案</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="icon">🎯</span>
+                                <span>高品質：專為療癒師設計的溫暖文案</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="icon">💝</span>
+                                <span>免費使用：Vercel 提供穩定的免費服務</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <h4>✨ 溫馨提醒</h4>
+                    <ul>
+                        <li>用真誠的語言描述，避免過度包裝</li>
+                        <li>分享真實的服務內容和效果</li>
+                        <li>想像和朋友聊天一樣自然</li>
+                    </ul>
+                </div>
+
+                <form id="copywritingForm">
+                    <div class="form-group">
+                        <label>您的療癒服務類型 <span class="required">*</span></label>
+                        <input type="text" id="serviceType" placeholder="例如：能量療癒、塔羅諮詢、芳療按摩" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>主要服務對象 <span class="required">*</span></label>
+                        <input type="text" id="targetClient" placeholder="例如：工作壓力大的女性、感情困擾的朋友、想要內在平靜的人" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>他們目前的困擾 <span class="required">*</span></label>
+                        <textarea id="clientPain" placeholder="例如：感到內心空虛、不知道人生方向、情緒經常起伏不定、睡眠品質不好" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>您的服務如何幫助他們</label>
+                        <textarea id="serviceHelp" placeholder="例如：幫助釋放內在壓力、找到生命的方向、平穩情緒、提升睡眠品質"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>服務後的美好改變</label>
+                        <textarea id="transformation" placeholder="例如：感到內心平靜、找到生活的意義、情緒更穩定、睡得更好"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>您的專業背景</label>
+                        <textarea id="background" placeholder="例如：5年療癒經驗、國際認證療癒師、曾幫助200+位朋友找到內在平靜"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>希望朋友如何聯繫您</label>
+                        <select id="contactMethod">
+                            <option value="line">加LINE詢問</option>
+                            <option value="message">私訊聯繫</option>
+                            <option value="phone">電話預約</option>
+                            <option value="form">填寫表單</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>聯繫方式</label>
+                        <input type="text" id="contactInfo" placeholder="例如：LINE ID: healing123 或 0912-345-678">
+                    </div>
+
+                    <button type="button" class="generate-btn" id="generateBtn" onclick="generateContent()">
+                        🌸 生成溫暖文案
+                    </button>
+                </form>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title">💫 生成的文案內容</h2>
+
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <span>自然分享</span>
+                        <div class="step-names">- 真誠開場</div>
+                        <button class="copy-btn" onclick="copyStep(1)">複製</button>
+                    </div>
+                    <div class="step-content empty" id="step1">
+                        填寫左側資訊，點擊生成按鈕開始創建溫暖文案...
+                    </div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <span>建立共鳴</span>
+                        <div class="step-names">- 理解與同理</div>
+                        <button class="copy-btn" onclick="copyStep(2)">複製</button>
+                    </div>
+                    <div class="step-content empty" id="step2">
+                        等待生成共鳴內容...
+                    </div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <span>展現專業</span>
+                        <div class="step-names">- 溫和建立信任</div>
+                        <button class="copy-btn" onclick="copyStep(3)">複製</button>
+                    </div>
+                    <div class="step-content empty" id="step3">
+                        等待生成專業展現內容...
+                    </div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <span>溫柔邀請</span>
+                        <div class="step-names">- 分享美好可能</div>
+                        <button class="copy-btn" onclick="copyStep(4)">複製</button>
+                    </div>
+                    <div class="step-content empty" id="step4">
+                        等待生成邀請內容...
+                    </div>
+                </div>
+
+                <div class="step-container">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <span>簡單行動</span>
+                        <div class="step-names">- 輕鬆的下一步</div>
+                        <button class="copy-btn" onclick="copyStep(5)">複製</button>
+                    </div>
+                    <div class="step-content empty" id="step5">
+                        等待生成行動邀請內容...
+                    </div>
+                </div>
+
+                <div class="final-copy" id="finalCopy" style="display: none;">
+                    <h3>📝 完整文案</h3>
+                    <div class="final-copy-content" id="finalCopyContent"></div>
+                    <button class="copy-btn" onclick="copyFinalCopy()">複製全文</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 載入狀態顯示 -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>正在生成溫暖文案...</h3>
+            <p id="loadingStep">準備中...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
