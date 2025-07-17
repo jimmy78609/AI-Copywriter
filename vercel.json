@@ -5,17 +5,20 @@
       "maxDuration": 30
     }
   },
+  "buildCommand": "echo 'No build needed'",
+  "outputDirectory": ".",
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },
     {
-      "src": "/(.*)",
+      "src": "/(.*\\.(css|js|html|ico|png|jpg|jpeg|gif|svg))",
       "dest": "/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
