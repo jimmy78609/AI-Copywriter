@@ -457,7 +457,7 @@ async function callAnthropic(prompt, apiKey) {
             'anthropic-dangerous-direct-browser-access': 'true' // 🔑 2024年8月新增：CORS支援
         },
         body: JSON.stringify({
-            model: 'claude-3-sonnet-20240229',
+            model: 'claude-3-5-sonnet-latest', // 使用最新的3.5 Sonnet
             max_tokens: 1000,
             messages: [
                 {
