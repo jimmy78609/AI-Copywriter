@@ -20,25 +20,51 @@
                 <h2 class="section-title">💚 服務資訊填寫</h2>
                 
                 <div class="tips">
-                    <h4>🌟 專業 AI 文案生成</h4>
+                    <h4>🌟 為什麼需要API Key？</h4>
                     <div class="explanation">
-                        <p>使用先進的 AI 技術為您生成專業文案，安全、快速、有效果！</p>
+                        <p>這個工具使用AI來為您生成專業文案，就像有一位24小時待命的文案助手！</p>
                         <div class="benefits">
                             <div class="benefit-item">
                                 <span class="icon">🔒</span>
-                                <span>完全安全：您的資料不會被儲存</span>
+                                <span>完全安全：您的API Key只存在您的電腦中</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="icon">💰</span>
+                                <span>超低成本：每次生成約$0.01-0.05 (約台幣0.3-1.5元)</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="icon">🎁</span>
+                                <span>免費額度：Google免費15次/月，OpenAI新用戶贈送$5</span>
                             </div>
                             <div class="benefit-item">
                                 <span class="icon">⚡</span>
-                                <span>快速生成：30秒內完成專業文案</span>
+                                <span>比請文案寫手便宜1000倍以上</span>
                             </div>
-                            <div class="benefit-item">
-                                <span class="icon">🎯</span>
-                                <span>高品質：專為療癒師設計的溫暖文案</span>
-                            </div>
-                            <div class="benefit-item">
-                                <span class="icon">💝</span>
-                                <span>免費使用：Vercel 提供穩定的免費服務</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <h4>🔑 API Key 設置</h4>
+                    <div class="api-setup">
+                        <label>選擇AI服務商 <span class="recommended">(推薦Google - 有免費額度)</span></label>
+                        <select id="apiProvider">
+                            <option value="google">Google Gemini (免費15次/月) 🌟</option>
+                            <option value="openai">OpenAI GPT-4 (新用戶贈送$5)</option>
+                            <option value="anthropic">Anthropic Claude (最高品質)</option>
+                        </select>
+                        
+                        <label>API Key <span class="help-text">不知道怎麼申請？<a href="#" onclick="showTutorial()">點這裡看教學</a></span></label>
+                        <input type="password" id="apiKey" placeholder="貼上您的API Key">
+                        
+                        <div class="api-info">
+                            <small>💡 您的API Key只會儲存在本地瀏覽器中，不會上傳到任何服務器</small>
+                            <br>
+                            <small>🔗 申請連結：</small>
+                            <div class="api-links">
+                                <a href="https://makersuite.google.com/app/apikey" target="_blank">Google (免費)</a> | 
+                                <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a> | 
+                                <a href="https://console.anthropic.com/" target="_blank">Anthropic</a>
                             </div>
                         </div>
                     </div>
@@ -183,6 +209,62 @@
             <div class="spinner"></div>
             <h3>正在生成溫暖文案...</h3>
             <p id="loadingStep">準備中...</p>
+        </div>
+    </div>
+
+    <!-- 教學彈窗 -->
+    <div class="tutorial-modal" id="tutorialModal" style="display: none;">
+        <div class="tutorial-content">
+            <span class="tutorial-close" onclick="closeTutorial()">&times;</span>
+            <h2>🔑 如何申請 API Key</h2>
+            
+            <div class="tutorial-section">
+                <h3>🌟 Google Gemini (推薦 - 免費)</h3>
+                <ol>
+                    <li>前往 <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+                    <li>用Google帳號登入</li>
+                    <li>點擊「Create API Key」</li>
+                    <li>複製產生的API Key</li>
+                    <li>回到這裡貼上即可使用</li>
+                </ol>
+                <p><strong>免費額度：</strong>每月15次免費調用</p>
+            </div>
+
+            <div class="tutorial-section">
+                <h3>🤖 OpenAI GPT-4</h3>
+                <ol>
+                    <li>前往 <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></li>
+                    <li>註冊或登入帳號</li>
+                    <li>點擊「Create new secret key」</li>
+                    <li>複製產生的API Key</li>
+                    <li>需要綁定信用卡，但新用戶有$5免費額度</li>
+                </ol>
+                <p><strong>成本：</strong>約$0.03/次</p>
+            </div>
+
+            <div class="tutorial-section">
+                <h3>🧠 Anthropic Claude</h3>
+                <ol>
+                    <li>前往 <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a></li>
+                    <li>註冊帳號</li>
+                    <li>點擊「Create Key」</li>
+                    <li>複製API Key</li>
+                    <li>需要綁定信用卡</li>
+                </ol>
+                <p><strong>成本：</strong>約$0.015/次，品質最高</p>
+            </div>
+
+            <div class="tutorial-section faq">
+                <h3>❓ 常見問題</h3>
+                <p><strong>Q: API Key 安全嗎？</strong></p>
+                <p>A: 完全安全！您的API Key只存在本地瀏覽器，不會傳送到任何其他服務器。</p>
+                
+                <p><strong>Q: 會很貴嗎？</strong></p>
+                <p>A: 非常便宜！Google每月15次免費，其他服務每次約台幣0.5-1元。</p>
+                
+                <p><strong>Q: 忘記API Key了怎麼辦？</strong></p>
+                <p>A: 可以隨時回到原申請網站查看或重新產生。</p>
+            </div>
         </div>
     </div>
 
