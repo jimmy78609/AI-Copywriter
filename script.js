@@ -86,7 +86,7 @@ function updateApiInfo() {
         anthropic: {
             description: '💡 Anthropic Claude 品質最高，需要付費但成本很低',
             links: '<a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>',
-            backend: '❌ 後端未設定'
+            backend: '✅ 前端支援 (2024年8月新增CORS)'
         }
     };
     
@@ -242,9 +242,9 @@ function getDiagnosticSuggestions(errorMessage) {
     
     if (message.includes('anthropic') || message.includes('claude')) {
         return `
-            • 🚫 <strong>Claude API未設定</strong>: 後端缺少Anthropic API Key<br>
-            • 💰 <strong>需要付費</strong>: Claude API沒有免費額度<br>
-            • 🔧 <strong>建議</strong>: 使用Google Gemini (有免費額度)
+            • 🔑 <strong>API Key檢查</strong>: 確認Anthropic API Key是否正確<br>
+            • 💰 <strong>帳戶餘額</strong>: Claude API沒有免費額度，檢查付費狀態<br>
+            • 🔧 <strong>建議</strong>: 如果想免費測試，使用Google Gemini (有免費額度)
         `;
     }
     
@@ -272,11 +272,6 @@ async function callAI(prompt) {
     const provider = document.getElementById('apiProvider')?.value || 'google';
     
     console.log(`🔍 開始API調用 - 提供商: ${provider}, 有API Key: ${!!apiKey}, 後端可用: ${window.backendAvailable}`);
-    
-    // 如果選擇Claude但沒有API Key且後端不支援
-    if (provider === 'anthropic' && !apiKey && !window.backendAvailable) {
-        throw new Error('Claude API需要您自己的API Key，後端未提供此服務', 'anthropic_no_backend');
-    }
     
     // 如果有API Key，優先使用前端直調
     if (apiKey) {
@@ -451,14 +446,15 @@ async function callOpenAI(prompt, apiKey) {
     return data.choices[0].message.content;
 }
 
-// Anthropic API調用
+// Anthropic API調用 - 2024年8月更新支援CORS
 async function callAnthropic(prompt, apiKey) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01'
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true' // 🔑 2024年8月新增：CORS支援
         },
         body: JSON.stringify({
             model: 'claude-3-sonnet-20240229',
