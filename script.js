@@ -1,634 +1,555 @@
-/* 🌸 療癒師文案生成器 - Vercel 版樣式 */
+// 🌱 療癒師文案生成器 - 完整前端功能
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+// 頁面載入時初始化
+window.onload = function() {
+    loadSavedApiKey();
+    updateApiInfo();
+};
 
-body {
-    font-family: 'Microsoft JhengHei', '微軟正黑體', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-    min-height: 100vh;
-    padding: 20px;
-    color: #333;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    overflow: hidden;
-    animation: fadeInUp 0.6s ease;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+// API提供商改變時更新資訊
+document.addEventListener('DOMContentLoaded', function() {
+    const providerSelect = document.getElementById('apiProvider');
+    if (providerSelect) {
+        providerSelect.addEventListener('change', updateApiInfo);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+});
+
+// 更新API資訊顯示
+function updateApiInfo() {
+    const provider = document.getElementById('apiProvider')?.value;
+    const apiInfo = document.querySelector('.api-info');
+    
+    if (!apiInfo) return;
+    
+    const infoTexts = {
+        google: {
+            description: '💡 Google Gemini 有免費額度，每月可免費使用15次',
+            links: '<a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio (免費申請)</a>'
+        },
+        openai: {
+            description: '💡 OpenAI 新用戶贈送$5額度，約可使用150-200次',
+            links: '<a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>'
+        },
+        anthropic: {
+            description: '💡 Anthropic Claude 品質最高，需要付費但成本很低',
+            links: '<a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>'
+        }
+    };
+    
+    const info = infoTexts[provider] || infoTexts.google;
+    apiInfo.innerHTML = `
+        <small>${info.description}</small>
+        <br>
+        <small>🔗 申請連結：</small>
+        <div class="api-links">${info.links}</div>
+    `;
 }
 
-.header {
-    background: linear-gradient(135deg, #81c784, #66bb6a);
-    color: white;
-    padding: 40px 30px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: gentle-pulse 4s ease-in-out infinite;
-}
-
-@keyframes gentle-pulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 0.2; }
-}
-
-.header h1 {
-    font-size: 2.5em;
-    margin-bottom: 15px;
-    font-weight: 500;
-    position: relative;
-    z-index: 1;
-}
-
-.header p {
-    font-size: 1.2em;
-    opacity: 0.95;
-    position: relative;
-    z-index: 1;
-    font-weight: 300;
-}
-
-.main-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    min-height: 800px;
-}
-
-.input-section {
-    background: #fafafa;
-    padding: 40px 35px;
-    border-right: 1px solid #e0e0e0;
-    overflow-y: auto;
-    max-height: 90vh;
-}
-
-.output-section {
-    padding: 40px 35px;
-    background: white;
-    overflow-y: auto;
-    max-height: 90vh;
-}
-
-.section-title {
-    font-size: 1.8em;
-    margin-bottom: 30px;
-    color: #4a4a4a;
-    border-bottom: 3px solid #81c784;
-    padding-bottom: 12px;
-    position: relative;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: #66bb6a;
-    border-radius: 2px;
-}
-
-.form-group {
-    margin-bottom: 25px;
-    animation: slideInLeft 0.5s ease;
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
+// 顯示教學彈窗
+function showTutorial() {
+    const modal = document.getElementById('tutorialModal');
+    if (modal) {
+        modal.style.display = 'flex';
     }
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: #555;
-    font-size: 1.05em;
-}
-
-.required {
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    font-family: inherit;
-    background: white;
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #81c784;
-    box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.1);
-    transform: translateY(-1px);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 90px;
-    line-height: 1.6;
-}
-
-.generate-btn {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #81c784, #66bb6a);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.generate-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(129, 199, 132, 0.4);
-}
-
-.generate-btn:active {
-    transform: translateY(0);
-}
-
-.generate-btn.loading {
-    background: #bbb;
-    cursor: not-allowed;
-    animation: loading-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes loading-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-.step-container {
-    margin-bottom: 30px;
-    border: 1px solid #e0e0e0;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    animation: slideInRight 0.5s ease;
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
+// 關閉教學彈窗
+function closeTutorial() {
+    const modal = document.getElementById('tutorialModal');
+    if (modal) {
+        modal.style.display = 'none';
     }
 }
 
-.step-container:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-}
-
-.step-header {
-    background: linear-gradient(135deg, #90caf9, #64b5f6);
-    color: white;
-    padding: 20px 25px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    position: relative;
-}
-
-.step-number {
-    background: rgba(255,255,255,0.25);
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    flex-shrink: 0;
-}
-
-.step-content {
-    padding: 25px;
-    background: #fafafa;
-    min-height: 140px;
-    font-size: 16px;
-    line-height: 1.8;
-    white-space: pre-wrap;
-}
-
-.step-content.empty {
-    color: #999;
-    font-style: italic;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f8f9fa;
-}
-
-.copy-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.copy-btn:hover {
-    background: rgba(255,255,255,0.3);
-    transform: scale(1.05);
-}
-
-.tips {
-    background: linear-gradient(135deg, #fff8e1, #fff3c4);
-    border: 1px solid #ffcc02;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(255, 204, 2, 0.1);
-}
-
-.tips h4 {
-    color: #f57c00;
-    margin-bottom: 12px;
-    font-size: 1.2em;
-    font-weight: 600;
-}
-
-.tips ul {
-    margin-left: 20px;
-    color: #ef6c00;
-}
-
-.tips ul li {
-    margin-bottom: 8px;
-    line-height: 1.6;
-}
-
-.final-copy {
-    background: linear-gradient(135deg, #81c784, #66bb6a);
-    color: white;
-    padding: 30px;
-    border-radius: 15px;
-    margin-top: 25px;
-    position: relative;
-    box-shadow: 0 5px 20px rgba(129, 199, 132, 0.3);
-}
-
-.final-copy h3 {
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: 600;
-}
-
-.final-copy-content {
-    background: rgba(255,255,255,0.15);
-    padding: 25px;
-    border-radius: 10px;
-    min-height: 250px;
-    white-space: pre-wrap;
-    line-height: 1.9;
-    font-size: 15px;
-    backdrop-filter: blur(10px);
-}
-
-.step-names {
-    font-size: 0.9em;
-    opacity: 0.9;
-    font-weight: 400;
-}
-
-.explanation {
-    margin-top: 12px;
-}
-
-.explanation p {
-    margin-bottom: 15px;
-    color: #666;
-    line-height: 1.7;
-}
-
-.benefits {
-    margin-top: 15px;
-}
-
-.benefit-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-    font-size: 15px;
-    color: #555;
-    padding: 8px 0;
-}
-
-.benefit-item .icon {
-    font-size: 18px;
-    width: 25px;
-    flex-shrink: 0;
-}
-
-/* 載入遮罩 */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.loading-content {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    max-width: 400px;
-    width: 90%;
-}
-
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #81c784;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.loading-content h3 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 1.3em;
-}
-
-.loading-content p {
-    color: #666;
-    font-size: 1em;
-}
-
-/* 成功提示 */
-.success-toast {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, #4caf50, #45a049);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-    z-index: 1000;
-    font-weight: 500;
-    animation: slideInFromRight 0.3s ease;
-}
-
-@keyframes slideInFromRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
+// 點擊彈窗外部關閉
+window.onclick = function(event) {
+    const modal = document.getElementById('tutorialModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
     }
-    to {
-        transform: translateX(0);
-        opacity: 1;
+};
+
+// 保存和讀取API Key
+function saveApiKey() {
+    try {
+        const apiKey = document.getElementById('apiKey')?.value;
+        const provider = document.getElementById('apiProvider')?.value;
+        if (apiKey) {
+            localStorage.setItem('healingCopywriter_apiKey', apiKey);
+            localStorage.setItem('healingCopywriter_provider', provider);
+        }
+    } catch (error) {
+        console.log('保存API Key失敗:', error);
     }
 }
 
-/* 錯誤訊息 */
-.error-message {
-    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-    color: #721c24;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 15px 0;
-    border-left: 5px solid #dc3545;
-    font-size: 15px;
-    line-height: 1.6;
-    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.1);
+function loadSavedApiKey() {
+    try {
+        const savedKey = localStorage.getItem('healingCopywriter_apiKey');
+        const savedProvider = localStorage.getItem('healingCopywriter_provider');
+        
+        if (savedKey && document.getElementById('apiKey')) {
+            document.getElementById('apiKey').value = savedKey;
+        }
+        if (savedProvider && document.getElementById('apiProvider')) {
+            document.getElementById('apiProvider').value = savedProvider;
+        }
+    } catch (error) {
+        console.log('載入API Key失敗:', error);
+    }
 }
 
-/* 響應式設計 */
-@media (max-width: 768px) {
-    .main-content {
-        grid-template-columns: 1fr;
+// 顯示載入狀態
+function showLoading(message = '正在生成溫暖文案...') {
+    const overlay = document.getElementById('loadingOverlay');
+    const loadingStep = document.getElementById('loadingStep');
+    
+    if (overlay) overlay.style.display = 'flex';
+    if (loadingStep) loadingStep.textContent = message;
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.style.display = 'none';
+}
+
+// 顯示錯誤訊息
+function showError(message) {
+    hideLoading();
+    
+    // 移除舊的錯誤訊息
+    const oldError = document.querySelector('.error-message');
+    if (oldError) oldError.remove();
+    
+    // 創建新的錯誤訊息
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.innerHTML = `❌ ${message}`;
+    
+    // 插入到表單前面
+    const form = document.getElementById('copywritingForm');
+    if (form) {
+        form.parentNode.insertBefore(errorDiv, form);
+        
+        // 5秒後自動移除
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+}
+
+// 顯示成功訊息
+function showSuccess(message) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'success-toast';
+    successDiv.innerHTML = `✅ ${message}`;
+    
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+        if (successDiv.parentNode) {
+            successDiv.remove();
+        }
+    }, 3000);
+}
+
+// API調用函數
+async function callAI(prompt) {
+    const apiKey = document.getElementById('apiKey')?.value?.trim();
+    const provider = document.getElementById('apiProvider')?.value || 'google';
+    
+    if (!apiKey) {
+        throw new Error('請輸入API Key');
+    }
+
+    saveApiKey();
+
+    switch (provider) {
+        case 'openai':
+            return await callOpenAI(prompt, apiKey);
+        case 'anthropic':
+            return await callAnthropic(prompt, apiKey);
+        case 'google':
+        default:
+            return await callGoogle(prompt, apiKey);
+    }
+}
+
+// Google Gemini API調用
+async function callGoogle(prompt, apiKey) {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            contents: [
+                {
+                    parts: [
+                        {
+                            text: `你是一位專業的療癒師文案寫手，擅長寫出溫暖、自然、不具強迫性的文案。請用繁體中文回覆。\n\n${prompt}`
+                        }
+                    ]
+                }
+            ],
+            generationConfig: {
+                temperature: 0.8,
+                maxOutputTokens: 1000,
+                topP: 0.8,
+                topK: 40
+            }
+        })
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Google API 錯誤:', response.status, errorText);
+        
+        if (response.status === 400) {
+            throw new Error('Google API Key 可能無效，請檢查是否正確');
+        } else if (response.status === 403) {
+            throw new Error('Google API 權限不足，請檢查 API Key 權限設定');
+        } else if (response.status === 429) {
+            throw new Error('Google API 使用量超限，請稍後再試或檢查額度');
+        } else {
+            throw new Error(`Google API 錯誤 (${response.status})，請稍後再試`);
+        }
+    }
+
+    const data = await response.json();
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+        console.error('Google API 回應格式異常:', data);
+        throw new Error('Google API 回應格式異常，請稍後再試');
+    }
+
+    return data.candidates[0].content.parts[0].text;
+}
+
+// OpenAI API調用
+async function callOpenAI(prompt, apiKey) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'gpt-4',
+            messages: [
+                {
+                    role: 'system',
+                    content: '你是一位專業的療癒師文案寫手，擅長寫出溫暖、自然、不具強迫性的文案。請用繁體中文回覆。'
+                },
+                {
+                    role: 'user',
+                    content: prompt
+                }
+            ],
+            max_tokens: 1000,
+            temperature: 0.8
+        })
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        console.error('OpenAI API 錯誤:', error);
+        
+        if (response.status === 401) {
+            throw new Error('OpenAI API Key 無效，請檢查是否正確');
+        } else if (response.status === 429) {
+            throw new Error('OpenAI API 使用量超限，請檢查額度或稍後再試');
+        } else if (response.status === 402) {
+            throw new Error('OpenAI 帳戶餘額不足，請檢查付費狀態');
+        } else {
+            throw new Error(`OpenAI API錯誤: ${error.error?.message || '未知錯誤'}`);
+        }
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
+
+// Anthropic API調用
+async function callAnthropic(prompt, apiKey) {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+            model: 'claude-3-sonnet-20240229',
+            max_tokens: 1000,
+            messages: [
+                {
+                    role: 'user',
+                    content: `你是一位專業的療癒師文案寫手，擅長寫出溫暖、自然、不具強迫性的文案。請用繁體中文回覆。\n\n${prompt}`
+                }
+            ]
+        })
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        console.error('Anthropic API 錯誤:', error);
+        
+        if (response.status === 401) {
+            throw new Error('Anthropic API Key 無效，請檢查是否正確');
+        } else if (response.status === 429) {
+            throw new Error('Anthropic API 使用量超限，請稍後再試');
+        } else if (response.status === 402) {
+            throw new Error('Anthropic 帳戶餘額不足，請檢查付費狀態');
+        } else {
+            throw new Error(`Anthropic API錯誤: ${error.error?.message || '未知錯誤'}`);
+        }
+    }
+
+    const data = await response.json();
+    return data.content[0].text;
+}
+
+// 主要生成函數
+async function generateContent() {
+    // 收集表單資料
+    const formData = {
+        serviceType: document.getElementById('serviceType')?.value || '',
+        targetClient: document.getElementById('targetClient')?.value || '',
+        clientPain: document.getElementById('clientPain')?.value || '',
+        serviceHelp: document.getElementById('serviceHelp')?.value || '',
+        transformation: document.getElementById('transformation')?.value || '',
+        background: document.getElementById('background')?.value || '',
+        contactMethod: document.getElementById('contactMethod')?.value || 'line',
+        contactInfo: document.getElementById('contactInfo')?.value || ''
+    };
+
+    // 檢查必填欄位
+    if (!formData.serviceType || !formData.targetClient || !formData.clientPain) {
+        showError('請至少填寫服務類型、服務對象和他們的困擾');
+        return;
+    }
+
+    const apiKey = document.getElementById('apiKey')?.value?.trim();
+    if (!apiKey) {
+        showError('請輸入API Key才能使用AI生成功能');
+        return;
+    }
+
+    // 顯示載入狀態
+    const generateBtn = document.getElementById('generateBtn');
+    if (generateBtn) {
+        generateBtn.classList.add('loading');
+        generateBtn.textContent = '生成中...';
+        generateBtn.disabled = true;
+    }
+
+    showLoading('正在生成溫暖文案...');
+
+    try {
+        // 清空之前的內容
+        for (let i = 1; i <= 5; i++) {
+            const stepElement = document.getElementById(`step${i}`);
+            if (stepElement) {
+                stepElement.innerHTML = '生成中...';
+                stepElement.classList.remove('empty');
+            }
+        }
+
+        // 隱藏完整文案
+        const finalCopy = document.getElementById('finalCopy');
+        if (finalCopy) finalCopy.style.display = 'none';
+
+        // 依序生成各步驟文案
+        await generateStep1(formData);
+        await generateStep2(formData);
+        await generateStep3(formData);
+        await generateStep4(formData);
+        await generateStep5(formData);
+        
+        // 生成完整文案
+        generateFinalContent();
+        
+        hideLoading();
+        showSuccess('文案生成完成！');
+        
+    } catch (error) {
+        console.error('生成錯誤:', error);
+        showError(`生成失敗: ${error.message}`);
+    } finally {
+        // 恢復按鈕狀態
+        if (generateBtn) {
+            generateBtn.classList.remove('loading');
+            generateBtn.textContent = '🌸 生成溫暖文案';
+            generateBtn.disabled = false;
+        }
+        hideLoading();
+    }
+}
+
+// 生成各步驟文案
+async function generateStep1(data) {
+    const prompt = `
+請為療癒師寫一段「自然分享」的文案開場，要求：
+- 像朋友聊天一樣真誠
+- 針對${data.targetClient}
+- 提到他們的困擾：${data.clientPain}
+- 服務類型：${data.serviceType}
+- 語氣溫暖、自然，不要有推銷感
+- 字數約150-200字
+- 用繁體中文
+    `;
+
+    try {
+        showLoading('正在生成自然分享內容...');
+        const content = await callAI(prompt);
+        document.getElementById('step1').innerHTML = content;
+    } catch (error) {
+        document.getElementById('step1').innerHTML = `生成失敗: ${error.message}`;
+        throw error;
+    }
+}
+
+async function generateStep2(data) {
+    const prompt = `
+請為療癒師寫一段「建立共鳴」的文案，要求：
+- 展現對${data.targetClient}困擾的理解和同理心
+- 提到他們的痛點：${data.clientPain}
+- 讓讀者感到「你懂我」
+- 語氣溫暖、理解，不批判
+- 字數約200-250字
+- 用繁體中文
+    `;
+
+    try {
+        showLoading('正在生成建立共鳴內容...');
+        const content = await callAI(prompt);
+        document.getElementById('step2').innerHTML = content;
+    } catch (error) {
+        document.getElementById('step2').innerHTML = `生成失敗: ${error.message}`;
+        throw error;
+    }
+}
+
+async function generateStep3(data) {
+    const prompt = `
+請為療癒師寫一段「展現專業」的文案，要求：
+- 溫和地建立信任感
+- 提到背景：${data.background}
+- 服務類型：${data.serviceType}
+- 強調陪伴而非治療
+- 語氣專業但溫暖
+- 字數約200-250字
+- 用繁體中文
+    `;
+
+    try {
+        showLoading('正在生成展現專業內容...');
+        const content = await callAI(prompt);
+        document.getElementById('step3').innerHTML = content;
+    } catch (error) {
+        document.getElementById('step3').innerHTML = `生成失敗: ${error.message}`;
+        throw error;
+    }
+}
+
+async function generateStep4(data) {
+    const prompt = `
+請為療癒師寫一段「溫柔邀請」的文案，要求：
+- 分享服務能帶來的美好改變：${data.transformation}
+- 服務如何幫助：${data.serviceHelp}
+- 用溫暖的語氣描述未來的可能
+- 不要有強迫性或誇大的詞彙
+- 字數約250-300字
+- 用繁體中文
+    `;
+
+    try {
+        showLoading('正在生成溫柔邀請內容...');
+        const content = await callAI(prompt);
+        document.getElementById('step4').innerHTML = content;
+    } catch (error) {
+        document.getElementById('step4').innerHTML = `生成失敗: ${error.message}`;
+        throw error;
+    }
+}
+
+async function generateStep5(data) {
+    const contactMethods = {
+        line: '加LINE',
+        message: '私訊',
+        phone: '電話',
+        form: '填寫表單'
+    };
+
+    const prompt = `
+請為療癒師寫一段「簡單行動」的文案，要求：
+- 邀請透過${contactMethods[data.contactMethod]}聯繫：${data.contactInfo}
+- 強調沒有壓力、完全自由選擇
+- 語氣溫暖、不強迫
+- 讓人感到安心和被支持
+- 字數約200-250字
+- 用繁體中文
+    `;
+
+    try {
+        showLoading('正在生成簡單行動內容...');
+        const content = await callAI(prompt);
+        document.getElementById('step5').innerHTML = content;
+        
+        // 顯示完整文案
+        const finalCopy = document.getElementById('finalCopy');
+        if (finalCopy) finalCopy.style.display = 'block';
+    } catch (error) {
+        document.getElementById('step5').innerHTML = `生成失敗: ${error.message}`;
+        throw error;
+    }
+}
+
+// 生成完整文案
+function generateFinalContent() {
+    const steps = [];
+    for (let i = 1; i <= 5; i++) {
+        const stepElement = document.getElementById(`step${i}`);
+        if (stepElement && !stepElement.innerHTML.includes('生成失敗')) {
+            steps.push(stepElement.innerHTML);
+        }
     }
     
-    .input-section {
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-        max-height: none;
-    }
-    
-    .output-section {
-        max-height: none;
-    }
-    
-    .header h1 {
-        font-size: 2em;
-    }
-    
-    .header p {
-        font-size: 1em;
-    }
-    
-    .container {
-        margin: 10px;
-        border-radius: 15px;
-    }
-    
-    body {
-        padding: 10px;
-    }
-    
-    .input-section,
-    .output-section {
-        padding: 25px 20px;
-    }
-    
-    .section-title {
-        font-size: 1.5em;
-    }
-    
-    .success-toast {
-        top: 20px;
-        right: 20px;
-        left: 20px;
-        text-align: center;
+    const finalContent = steps.join('\n\n');
+    const finalCopyContent = document.getElementById('finalCopyContent');
+    if (finalCopyContent) {
+        finalCopyContent.innerHTML = finalContent;
     }
 }
 
-@media (max-width: 480px) {
-    .header {
-        padding: 30px 20px;
-    }
+// 複製功能
+async function copyStep(stepNumber) {
+    const stepElement = document.getElementById(`step${stepNumber}`);
+    if (!stepElement) return;
     
-    .header h1 {
-        font-size: 1.8em;
-    }
-    
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        padding: 12px;
-        font-size: 14px;
-    }
-    
-    .generate-btn {
-        padding: 15px;
-        font-size: 16px;
-    }
-    
-    .step-header {
-        padding: 15px 20px;
-    }
-    
-    .step-content {
-        padding: 20px;
-        font-size: 15px;
+    try {
+        const stepContent = stepElement.innerText;
+        await navigator.clipboard.writeText(stepContent);
+        showSuccess(`第${stepNumber}步文案已複製到剪貼板`);
+    } catch (error) {
+        console.error('複製失敗:', error);
+        showError('複製失敗，請手動選取文字複製');
     }
 }
 
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-    body {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    }
+async function copyFinalCopy() {
+    const finalElement = document.getElementById('finalCopyContent');
+    if (!finalElement) return;
     
-    .container {
-        background: #2d3748;
-        color: #e2e8f0;
-    }
-    
-    .input-section {
-        background: #374151;
-    }
-    
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        background: #4a5568;
-        border-color: #718096;
-        color: #e2e8f0;
-    }
-    
-    .step-content {
-        background: #374151;
-        color: #e2e8f0;
-    }
-    
-    .step-content.empty {
-        background: #2d3748;
-        color: #a0aec0;
-    }
-}
-
-/* 無障礙改善 */
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    outline: 2px solid #81c784;
-    outline-offset: 2px;
-}
-
-.copy-btn:focus,
-.generate-btn:focus {
-    outline: 2px solid #ffffff;
-    outline-offset: 2px;
-}
-
-/* 印刷樣式 */
-@media print {
-    .input-section {
-        display: none;
-    }
-    
-    .main-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .copy-btn {
-        display: none;
-    }
-    
-    .final-copy {
-        background: white;
-        color: black;
-        border: 2px solid #81c784;
-    }
-    
-    .final-copy-content {
-        background: white;
-        color: black;
+    try {
+        const finalContent = finalElement.innerText;
+        await navigator.clipboard.writeText(finalContent);
+        showSuccess('完整文案已複製到剪貼板');
+    } catch (error) {
+        console.error('複製失敗:', error);
+        showError('複製失敗，請手動選取文字複製');
     }
 }
